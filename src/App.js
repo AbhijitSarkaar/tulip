@@ -1,20 +1,18 @@
 import { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import detectEthereumProvider from "@metamask/detect-provider";
-import { create } from "ipfs-http-client";
 import movies from "./data.json";
-import api from "../artifacts/contracts/TicketNFT.sol/TicketNFT.json";
+import api from "./api.json";
 import "./App.css";
+const IPFS = require("ipfs");
 
-require("dotenv").config();
-
-const client = create("https://ipfs.infura.io:5001/api/v0");
-const CONTRACT_ADDRESS = process.env.CONTRACT_ADDRESS;
+const CONTRACT_ADDRESS = "0x0Abbcdd04fBf5FbCA8Df150B641598d136a894F4";
 const abi = api.abi;
 
 function App() {
     const [currentAccount, setCurrentAccount] = useState("");
     const [data, setData] = useState([]);
+    let node;
 
     useEffect(() => {
         checkIfWalletConnected();
@@ -70,13 +68,30 @@ function App() {
     };
 
     const storeData = async () => {
+        if (!node) {
+            console.log("creating an ipfs instance");
+            node = await IPFS.create();
+        }
         const filedata = JSON.stringify({
             name: "Tulip NFT",
-            description: "NFT Minted on booking from web app",
-            image: "https://i.imgur.com/p22qfrC.jpeg",
+            description: "nice location for having a beer",
+            image: "https://i.imgur.com/jUe6Eyl.jpeg",
         });
-        const ipfsData = await client.add(filedata);
-        console.log("endpoint", ipfsData.path);
+        console.log(node);
+        const ipfsData = await node.add(filedata);
+        const path = `https://ipfs.io/ipfs/${ipfsData.path}`;
+        console.log(path);
+
+        const { ethereum } = window;
+        if (ethereum) {
+            const provider = new ethers.providers.Web3Provider(ethereum);
+            const signer = provider.getSigner();
+            const contract = new ethers.Contract(CONTRACT_ADDRESS, abi, signer);
+            console.log("creating nft..");
+            const txn = await contract.createTicketNFT(path);
+            console.log("nft created");
+            console.log("transaction", txn);
+        }
     };
 
     return (
