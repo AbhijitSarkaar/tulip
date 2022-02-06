@@ -40,11 +40,7 @@ const NFTList = () => {
                     item.contract_address;
                 return item.nft_data;
             })
-            .filter(
-                (res) =>
-                    String(res[0].owner_address) ===
-                    "0x8fe4f57d683db74ce35fcad5e1ecfb8c45c2e18d"
-            )
+            .filter((res) => String(res[0].owner_address) === address.value)
             .map((res) => {
                 return res[0].external_data;
             });
@@ -53,19 +49,47 @@ const NFTList = () => {
         setTickets(NFTData);
     };
 
-    return (
-        <MoviesListContainer>
+    return tickets.length > 0 ? (
+        <NFTListContainer>
             {tickets.map((ticket) => (
                 <NFT key={ticket.image} ticket={ticket}></NFT>
             ))}
-        </MoviesListContainer>
+        </NFTListContainer>
+    ) : (
+        <LoaderContainer>
+            <Loader />
+        </LoaderContainer>
     );
 };
 
-const MoviesListContainer = styled.div`
+const NFTListContainer = styled.div`
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 5px;
+`;
+
+const LoaderContainer = styled.div`
+    display: flex;
+    justify-content: center;
+    height: 600px;
+    align-items: center;
+`;
+
+const Loader = styled.div`
+    border: 8px solid white;
+    border-radius: 50%;
+    border-top: 8px solid cyan;
+    width: 200px;
+    height: 200px;
+    animation: spin 2s linear infinite;
+    @keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
 `;
 
 export default NFTList;

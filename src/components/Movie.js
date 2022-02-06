@@ -15,7 +15,7 @@ const Movie = (props) => {
                 </Rating>
                 <Button>
                     <Link
-                        style={{ textDecoration: "none", color: "blue" }}
+                        style={{ textDecoration: "none", color: "white" }}
                         to={`/details/${id}`}
                     >
                         {"Book Now"}
@@ -41,20 +41,21 @@ const Footer = styled.div`
     display: flex;
     border: 1px solid black;
     box-sizing: border-box;
+    border: 1px solid cyan;
 `;
 const Rating = styled.div`
     width: 50%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    border-right: 1px solid black;
+    border-right: 1px solid cyan;
 `;
 const RatingText = styled.div`
     height: 50%;
     font-size: 20px;
     display: flex;
     align-items: flex-end;
-    color: gray;
+    color: white;
 `;
 const RatingValue = styled.div`
     height: 50%;
@@ -62,6 +63,7 @@ const RatingValue = styled.div`
     font-weight: bolder;
     display: flex;
     align-items: center;
+    color: white;
 `;
 
 const Button = styled.div`

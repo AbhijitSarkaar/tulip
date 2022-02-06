@@ -102,11 +102,17 @@ const Connect = () => {
                         <Button onClick={handleClick}>Connect Wallet</Button>
                     ))}
             </Header>
-            <globalState.Provider value={context}>
-                <div style={{ padding: "20px" }}>
-                    <Outlet />
-                </div>
-            </globalState.Provider>
+            {context.list.length > 0 ? (
+                <globalState.Provider value={context}>
+                    <div style={{ padding: "20px" }}>
+                        <Outlet />
+                    </div>
+                </globalState.Provider>
+            ) : (
+                <LoaderContainer>
+                    <Loader />
+                </LoaderContainer>
+            )}
         </ConnectContainer>
     );
 };
@@ -120,7 +126,7 @@ const Header = styled.div`
     align-items: center;
     box-sizing: border-box;
     padding: 20px;
-    box-shadow: 0 3px 3px lightgray;
+    border-bottom: 0.1px solid white;
 `;
 const Brand = styled.div`
     font-size: 30px;
@@ -128,11 +134,12 @@ const Brand = styled.div`
     margin-left: 80px;
     font-family: verdana;
     cursor: pointer;
+    color: cyan;
 `;
 const Button = styled.div`
     height: 40px;
-    background: blue;
-    color: white;
+    background: cyan;
+    color: black;
     display: flex;
     width: max-content;
     align-items: center;
@@ -141,6 +148,29 @@ const Button = styled.div`
     box-sizing: border-box;
     cursor: pointer;
     border-radius: 5px;
+    font-weight: bold;
+`;
+const LoaderContainer = styled.div`
+    display: flex;
+    justify-content: center;
+    height: 600px;
+    align-items: center;
 `;
 
+const Loader = styled.div`
+    border: 8px solid white;
+    border-radius: 50%;
+    border-top: 8px solid cyan;
+    width: 200px;
+    height: 200px;
+    animation: spin 2s linear infinite;
+    @keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+`;
 export default Connect;

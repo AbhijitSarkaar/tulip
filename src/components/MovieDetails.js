@@ -1,13 +1,47 @@
 import { useContext } from "react";
-import { useParams } from "react-router";
+import { ethers } from "ethers";
+import { useNavigate, useParams } from "react-router";
 import detectEthereumProvider from "@metamask/detect-provider";
+import { CONTRACT_ADDRESS } from "../keys";
+import api from "../api.json";
 import styled from "styled-components";
 import { globalState } from "./globalContext";
+
+const IPFS = require("ipfs");
 
 const MovieDetails = () => {
     const { data, address } = useContext(globalState);
     const { id } = useParams();
+    const navigate = useNavigate();
     const movie = data[id];
+    let node;
+    const createNFT = async () => {
+        if (!node) {
+            console.log("creating an ipfs instance");
+            node = await IPFS.create();
+        }
+        const filedata = JSON.stringify(movie);
+        console.log(node);
+        const ipfsData = await node.add(filedata);
+        const path = `https://ipfs.io/ipfs/${ipfsData.path}`;
+        console.log(path);
+
+        const { ethereum } = window;
+        if (ethereum) {
+            const provider = new ethers.providers.Web3Provider(ethereum);
+            const signer = provider.getSigner();
+            const contract = new ethers.Contract(
+                CONTRACT_ADDRESS,
+                api.abi,
+                signer
+            );
+            console.log("creating nft..");
+            const txn = await contract.createTicketNFT(path);
+            console.log("nft created");
+            console.log("transaction", txn);
+            navigate("/");
+        }
+    };
 
     const handleClick = async () => {
         if (!address.value) {
@@ -18,6 +52,8 @@ const MovieDetails = () => {
                     method: "eth_requestAccounts",
                 });
             }
+        } else {
+            createNFT();
         }
     };
 
@@ -58,6 +94,7 @@ const Action = styled.div`
     display: grid;
     grid-template-rows: 1fr 10fr 1fr;
     padding-right: 20px;
+    color: white;
 `;
 const MovieName = styled.div`
     font-size: 40px;
@@ -75,8 +112,8 @@ const Button = styled.div`
     padding: 10px;
     border-radius: 4px;
     cursor: pointer;
-    background: #065b70;
-    color: white;
+    background: cyan;
+    color: black;
     font-weight: bold;
 `;
 
