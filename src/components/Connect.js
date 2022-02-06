@@ -1,12 +1,27 @@
+import { useState, useEffect } from "react";
 import styled from "styled-components";
+import MoviesList from "./MoviesList";
+import { CID } from "../keys";
 
 const Connect = () => {
+    const [movies, setMoviesList] = useState([]);
+    useEffect(() => {
+        getMoviesData();
+    }, []);
+
+    const getMoviesData = async () => {
+        const response = await fetch(`https://ipfs.io/ipfs/${CID}`);
+        const json = await response.json();
+        setMoviesList(json);
+    };
+
     return (
         <ConnectContainer>
             <Header>
                 <Brand>Tulip</Brand>
                 <Button>Connect Wallet</Button>
             </Header>
+            <MoviesList movies={movies}></MoviesList>
         </ConnectContainer>
     );
 };
