@@ -60,6 +60,8 @@ const Connect = () => {
                     value: "",
                 };
             }
+        } else {
+            alert("Please install metamask");
         }
         setContext(contextData);
     };
