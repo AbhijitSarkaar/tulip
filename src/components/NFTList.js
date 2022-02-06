@@ -1,6 +1,5 @@
 import { useEffect, useState, useContext } from "react";
 import NFT from "./NFT";
-import { API_KEY } from "../keys";
 import { globalState } from "./globalContext";
 import styled from "styled-components";
 import { useNavigate } from "react-router";
@@ -18,15 +17,14 @@ const NFTList = () => {
 
     const getNFTMetadata = async () => {
         const res1 = await fetch(
-            `https://api.covalenthq.com/v1/80001/tokens/0x0Abbcdd04fBf5FbCA8Df150B641598d136a894F4/nft_token_ids/?quote-currency=USD&format=JSON&page-size=10000&key=${API_KEY}`
+            `https://api.covalenthq.com/v1/80001/tokens/0x0Abbcdd04fBf5FbCA8Df150B641598d136a894F4/nft_token_ids/?quote-currency=USD&format=JSON&page-size=10000&key=ckey_b87e296d1faa48d983b7685409d`
         );
         const data1 = await res1.json();
         const tokenIds = data1.data.items.map((item) => item.token_id);
-        console.log("tokenIds", tokenIds);
 
         const promises = tokenIds.map((id) => {
             return fetch(
-                `https://api.covalenthq.com/v1/80001/tokens/0x0Abbcdd04fBf5FbCA8Df150B641598d136a894F4/nft_metadata/${id}/?key=${API_KEY}`
+                `https://api.covalenthq.com/v1/80001/tokens/0x0Abbcdd04fBf5FbCA8Df150B641598d136a894F4/nft_metadata/${id}/?key=ckey_b87e296d1faa48d983b7685409d`
             ).then((res) => res.json());
         });
         let data = [];
@@ -44,8 +42,6 @@ const NFTList = () => {
             .map((res) => {
                 return res[0].external_data;
             });
-        console.log("NFTData", NFTData);
-        console.log("data", data);
         setTickets(NFTData);
     };
 

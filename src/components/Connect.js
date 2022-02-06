@@ -17,7 +17,6 @@ const Connect = () => {
         window.ethereum.on("accountsChanged", (accounts) => {
             let address;
             if (accounts.length) {
-                console.log("Connect accountsChanged login");
                 address = {
                     value: accounts[0],
                 };
@@ -55,7 +54,6 @@ const Connect = () => {
                 method: "eth_accounts",
             });
             if (accounts.length) {
-                console.log("authorized accounts found", accounts);
                 contextData.address = {
                     value: accounts[0],
                 };
@@ -79,19 +77,12 @@ const Connect = () => {
                     method: "eth_requestAccounts",
                 });
                 if (accounts.length) {
-                    console.log("logged in with account: ", accounts);
                     newContext.address.value = accounts[0];
                 }
             }
         }
         setContext(newContext);
     };
-
-    console.log("context", context);
-    console.log(
-        "context",
-        context.address.value ? "My Tickets" : "Connect Wallet"
-    );
     return (
         <ConnectContainer>
             <Header>

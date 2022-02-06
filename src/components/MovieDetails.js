@@ -20,14 +20,11 @@ const MovieDetails = () => {
     const createNFT = async () => {
         setLoading(true);
         if (!node) {
-            console.log("creating an ipfs instance");
             node = await IPFS.create();
         }
         const filedata = JSON.stringify(movie);
-        console.log(node);
         const ipfsData = await node.add(filedata);
         const path = `https://ipfs.io/ipfs/${ipfsData.path}`;
-        console.log(path);
         const { ethereum } = window;
         if (ethereum) {
             const provider = new ethers.providers.Web3Provider(ethereum);
@@ -37,10 +34,7 @@ const MovieDetails = () => {
                 api.abi,
                 signer
             );
-            console.log("creating nft..");
-            const txn = await contract.createTicketNFT(path);
-            console.log("nft created");
-            console.log("transaction", txn);
+            await contract.createTicketNFT(path);
             setLoading(false);
             navigate("/");
         }
