@@ -1,12 +1,25 @@
 import { useContext } from "react";
 import { useParams } from "react-router";
+import detectEthereumProvider from "@metamask/detect-provider";
 import styled from "styled-components";
 import { globalState } from "./globalContext";
 
 const MovieDetails = () => {
-    const { data } = useContext(globalState);
+    const { data, address } = useContext(globalState);
     const { id } = useParams();
     const movie = data[id];
+
+    const handleClick = async () => {
+        if (!address.value) {
+            const provider = await detectEthereumProvider();
+            const { ethereum } = window;
+            if (provider) {
+                await ethereum.request({
+                    method: "eth_requestAccounts",
+                });
+            }
+        }
+    };
 
     return (
         <MovieDetailsContainer>
@@ -17,7 +30,9 @@ const MovieDetails = () => {
                 <Action>
                     <MovieName>{movie?.name}</MovieName>
                     <Description>{movie?.description}</Description>
-                    <Button>Book Ticket</Button>
+                    <Button onClick={handleClick}>
+                        {address.value ? "Book Ticket" : "Connect Wallet"}
+                    </Button>
                 </Action>
             </Details>
         </MovieDetailsContainer>

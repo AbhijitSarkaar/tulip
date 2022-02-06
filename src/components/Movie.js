@@ -18,7 +18,7 @@ const Movie = (props) => {
                         style={{ textDecoration: "none", color: "blue" }}
                         to={`/details/${id}`}
                     >
-                        Book Now
+                        {"Book Now"}
                     </Link>
                 </Button>
             </Footer>

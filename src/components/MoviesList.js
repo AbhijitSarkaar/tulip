@@ -5,7 +5,6 @@ import { useContext } from "react";
 
 const MoviesList = () => {
     const state = useContext(globalState);
-    console.log("state", state);
     return (
         <MoviesListContainer>
             {state.list.map((movie) => (

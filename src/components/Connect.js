@@ -1,15 +1,40 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { globalState, initialState } from "./globalContext";
+import detectEthereumProvider from "@metamask/detect-provider";
 import { CID } from "../keys";
-import { Outlet } from "react-router";
+import { Outlet, useNavigate } from "react-router";
 
 const Connect = () => {
     const [context, setContext] = useState(initialState);
+    const navigate = useNavigate();
 
     useEffect(() => {
         getMoviesData();
+        setUpEvents();
     }, []);
+
+    const setUpEvents = async () => {
+        window.ethereum.on("accountsChanged", (accounts) => {
+            let address;
+            if (accounts.length) {
+                console.log("Connect accountsChanged login");
+                address = {
+                    value: accounts[0],
+                };
+            } else {
+                address = {
+                    value: "",
+                };
+                navigate("/");
+            }
+
+            setContext((prevState) => ({
+                ...prevState,
+                address,
+            }));
+        });
+    };
 
     const getMoviesData = async () => {
         const response = await fetch(`https://ipfs.io/ipfs/${CID}`);
@@ -22,14 +47,60 @@ const Connect = () => {
             list: json,
             data,
         };
+        const provider = await detectEthereumProvider();
+        const { ethereum } = window;
+        if (provider) {
+            const accounts = await ethereum.request({
+                method: "eth_accounts",
+            });
+            if (accounts.length) {
+                console.log("authorized accounts found", accounts);
+                contextData.address = {
+                    value: accounts[0],
+                };
+            } else {
+                contextData.address = {
+                    value: "",
+                };
+            }
+        }
         setContext(contextData);
     };
-    console.log("render connect");
+
+    const handleClick = async () => {
+        let newContext = context;
+        if (context.address.value) {
+            navigate("/my-nfts");
+        } else {
+            const { ethereum } = window;
+            if (ethereum) {
+                const accounts = await ethereum.request({
+                    method: "eth_requestAccounts",
+                });
+                if (accounts.length) {
+                    console.log("logged in with account: ", accounts);
+                    newContext.address.value = accounts[0];
+                }
+            }
+        }
+        setContext(newContext);
+    };
+
+    console.log("context", context);
+    console.log(
+        "context",
+        context.address.value ? "My Tickets" : "Connect Wallet"
+    );
     return (
         <ConnectContainer>
             <Header>
-                <Brand>Tulip</Brand>
-                <Button>Connect Wallet</Button>
+                <Brand onClick={() => navigate("/")}>Tulip</Brand>
+                {context.address &&
+                    (context.address.value ? (
+                        <Button onClick={handleClick}>My Tickets </Button>
+                    ) : (
+                        <Button onClick={handleClick}>Connect Wallet</Button>
+                    ))}
             </Header>
             <globalState.Provider value={context}>
                 <div style={{ padding: "20px" }}>
@@ -56,6 +127,7 @@ const Brand = styled.div`
     font-weight: bolder;
     margin-left: 80px;
     font-family: verdana;
+    cursor: pointer;
 `;
 const Button = styled.div`
     height: 40px;

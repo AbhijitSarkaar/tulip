@@ -1,13 +1,19 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import NFT from "./NFT";
 import { API_KEY } from "../keys";
+import { globalState } from "./globalContext";
 import styled from "styled-components";
+import { useNavigate } from "react-router";
 
 const NFTList = () => {
+    const { address } = useContext(globalState);
+    const navigate = useNavigate();
     const [tickets, setTickets] = useState([]);
 
     useEffect(() => {
-        getNFTMetadata();
+        if (!address || !address.value) {
+            navigate("/");
+        } else getNFTMetadata();
     }, []);
 
     const getNFTMetadata = async () => {
