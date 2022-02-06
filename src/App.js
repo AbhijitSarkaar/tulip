@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Home from "./components/Home";
 import MyNFTs from "./components/MyNFTs";
 import Connect from "./components/Connect";
-import TicketDetails from "./components/TicketDetails";
+import MovieDetails from "./components/MovieDetails";
 
 const App = () => {
     return (
@@ -10,7 +10,7 @@ const App = () => {
             <Routes>
                 <Route path="/" element={<Connect />} />
                 <Route path="home" element={<Home />} />
-                <Route path="details" element={<TicketDetails />} />
+                <Route path="details/:id" element={<MovieDetails />} />
                 <Route path="my-nfts" element={<MyNFTs />} />
                 <Route path="*" element={<div>Not found</div>} />
             </Routes>

@@ -1,7 +1,8 @@
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 const Movie = (props) => {
-    const { name, image, imdbRating } = props.movie;
+    const { id, name, image, imdbRating } = props.movie;
     return (
         <MovieContainer>
             <ImageContainer>
@@ -12,7 +13,14 @@ const Movie = (props) => {
                     <RatingText>Rating</RatingText>
                     <RatingValue>{imdbRating || 8}</RatingValue>
                 </Rating>
-                <Button>Book Now</Button>
+                <Button>
+                    <Link
+                        style={{ textDecoration: "none", color: "blue" }}
+                        to={`/details/${id}`}
+                    >
+                        Book Now
+                    </Link>
+                </Button>
             </Footer>
         </MovieContainer>
     );

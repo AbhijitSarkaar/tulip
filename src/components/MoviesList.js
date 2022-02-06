@@ -5,7 +5,7 @@ const MoviesList = (props) => {
     return (
         <MoviesListContainer>
             {props.movies.map((movie) => (
-                <Movie movie={movie}></Movie>
+                <Movie key={movie.id} movie={movie}></Movie>
             ))}
         </MoviesListContainer>
     );
