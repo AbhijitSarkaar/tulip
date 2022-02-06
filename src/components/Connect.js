@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
-import MoviesList from "./MoviesList";
+import { globalState, initialState } from "./globalContext";
 import { CID } from "../keys";
+import { Outlet } from "react-router";
 
 const Connect = () => {
-    const [movies, setMoviesList] = useState([]);
+    const [context, setContext] = useState(initialState);
     useEffect(() => {
         getMoviesData();
     }, []);
@@ -12,7 +13,15 @@ const Connect = () => {
     const getMoviesData = async () => {
         const response = await fetch(`https://ipfs.io/ipfs/${CID}`);
         const json = await response.json();
-        setMoviesList(json);
+        const data = json.reduce((acc, item) => {
+            acc[item.id] = item;
+            return acc;
+        }, {});
+        const contextData = {
+            list: json,
+            data,
+        };
+        setContext(contextData);
     };
 
     return (
@@ -21,7 +30,9 @@ const Connect = () => {
                 <Brand>Tulip</Brand>
                 <Button>Connect Wallet</Button>
             </Header>
-            <MoviesList movies={movies}></MoviesList>
+            <globalState.Provider value={context}>
+                <Outlet />
+            </globalState.Provider>
         </ConnectContainer>
     );
 };

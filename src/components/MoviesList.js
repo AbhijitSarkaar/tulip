@@ -1,10 +1,14 @@
 import styled from "styled-components";
 import Movie from "./Movie";
+import { globalState } from "./globalContext";
+import { useContext } from "react";
 
-const MoviesList = (props) => {
+const MoviesList = () => {
+    const state = useContext(globalState);
+    console.log("state", state);
     return (
         <MoviesListContainer>
-            {props.movies.map((movie) => (
+            {state.list.map((movie) => (
                 <Movie key={movie.id} movie={movie}></Movie>
             ))}
         </MoviesListContainer>

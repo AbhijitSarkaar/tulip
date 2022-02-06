@@ -1,33 +1,22 @@
+import { useContext } from "react";
 import { useParams } from "react-router";
 import styled from "styled-components";
+import { globalState } from "./globalContext";
 
 const MovieDetails = () => {
+    const { data } = useContext(globalState);
     const { id } = useParams();
+    const movie = data[id];
 
     return (
         <MovieDetailsContainer>
             <Details>
                 <PosterContainer>
-                    <Image
-                        src={
-                            "https://images-na.ssl-images-amazon.com/images/M/MV5BMTg1MTY2MjYzNV5BMl5BanBnXkFtZTgwMTc4NTMwNDI@._V1_SY500_CR0,0,337,500_AL_.jpg"
-                        }
-                    ></Image>
+                    <Image src={movie?.image}></Image>
                 </PosterContainer>
                 <Action>
-                    <MovieName>Black Panther</MovieName>
-                    <Description>
-                        After the events of Captain America: Civil War, King
-                        T'Challa returns home to the reclusive, technologically
-                        advanced African nation of Wakanda to serve as his
-                        country's new leader. However, T'Challa soon finds that
-                        he is challenged for the throne from factions within his
-                        own country. When two foes conspire to destroy Wakanda,
-                        the hero known as Black Panther must team up with C.I.A.
-                        agent Everett K. Ross and members of the Dora Milaje,
-                        Wakandan special forces, to prevent Wakanda from being
-                        dragged into a world war.
-                    </Description>
+                    <MovieName>{movie?.name}</MovieName>
+                    <Description>{movie?.description}</Description>
                     <Button>Book Ticket</Button>
                 </Action>
             </Details>
