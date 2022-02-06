@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { globalState, initialState } from "./globalContext";
 import detectEthereumProvider from "@metamask/detect-provider";
-import { CID } from "../keys";
 import { Outlet, useNavigate } from "react-router";
 
 const Connect = () => {
@@ -37,7 +36,9 @@ const Connect = () => {
     };
 
     const getMoviesData = async () => {
-        const response = await fetch(`https://ipfs.io/ipfs/${CID}`);
+        const response = await fetch(
+            `https://ipfs.io/ipfs/QmSZpPMUu1zmuCBscohbBk33u2FiouGNFxpAbKRBFS6Zi4`
+        );
         const json = await response.json();
         const data = json.reduce((acc, item) => {
             acc[item.id] = item;

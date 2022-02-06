@@ -2,7 +2,6 @@ import { useState, useContext } from "react";
 import { ethers } from "ethers";
 import { useNavigate, useParams } from "react-router";
 import detectEthereumProvider from "@metamask/detect-provider";
-import { CONTRACT_ADDRESS } from "../keys";
 import api from "../api.json";
 import styled from "styled-components";
 import { globalState } from "./globalContext";
@@ -34,7 +33,7 @@ const MovieDetails = () => {
             const provider = new ethers.providers.Web3Provider(ethereum);
             const signer = provider.getSigner();
             const contract = new ethers.Contract(
-                CONTRACT_ADDRESS,
+                "0x0Abbcdd04fBf5FbCA8Df150B641598d136a894F4",
                 api.abi,
                 signer
             );
