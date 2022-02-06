@@ -28,12 +28,12 @@ const MovieDetailsContainer = styled.div``;
 const Details = styled.div`
     height: 500px;
     display: grid;
-    grid-template-columns: 2fr 2fr;
+    grid-template-columns: 2fr 3fr;
     gap: 100px;
     box-sizing: border-box;
 `;
 const PosterContainer = styled.div`
-    padding-left: 100px;
+    padding-left: 120px;
 `;
 const Image = styled.img`
     width: 500px;

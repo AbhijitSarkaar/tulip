@@ -6,6 +6,7 @@ import { Outlet } from "react-router";
 
 const Connect = () => {
     const [context, setContext] = useState(initialState);
+
     useEffect(() => {
         getMoviesData();
     }, []);
@@ -23,7 +24,7 @@ const Connect = () => {
         };
         setContext(contextData);
     };
-
+    console.log("render connect");
     return (
         <ConnectContainer>
             <Header>
@@ -31,7 +32,9 @@ const Connect = () => {
                 <Button>Connect Wallet</Button>
             </Header>
             <globalState.Provider value={context}>
-                <Outlet />
+                <div style={{ padding: "20px" }}>
+                    <Outlet />
+                </div>
             </globalState.Provider>
         </ConnectContainer>
     );
