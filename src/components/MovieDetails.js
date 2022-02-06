@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useState, useContext } from "react";
 import { ethers } from "ethers";
 import { useNavigate, useParams } from "react-router";
 import detectEthereumProvider from "@metamask/detect-provider";
@@ -13,9 +13,13 @@ const MovieDetails = () => {
     const { data, address } = useContext(globalState);
     const { id } = useParams();
     const navigate = useNavigate();
+
+    const [loading, setLoading] = useState(false);
+
     const movie = data[id];
     let node;
     const createNFT = async () => {
+        setLoading(true);
         if (!node) {
             console.log("creating an ipfs instance");
             node = await IPFS.create();
@@ -25,7 +29,6 @@ const MovieDetails = () => {
         const ipfsData = await node.add(filedata);
         const path = `https://ipfs.io/ipfs/${ipfsData.path}`;
         console.log(path);
-
         const { ethereum } = window;
         if (ethereum) {
             const provider = new ethers.providers.Web3Provider(ethereum);
@@ -39,6 +42,7 @@ const MovieDetails = () => {
             const txn = await contract.createTicketNFT(path);
             console.log("nft created");
             console.log("transaction", txn);
+            setLoading(false);
             navigate("/");
         }
     };
@@ -67,7 +71,13 @@ const MovieDetails = () => {
                     <MovieName>{movie?.name}</MovieName>
                     <Description>{movie?.description}</Description>
                     <Button onClick={handleClick}>
-                        {address.value ? "Book Ticket" : "Connect Wallet"}
+                        {loading ? (
+                            <Loader />
+                        ) : address.value ? (
+                            "Book Ticket"
+                        ) : (
+                            "Connect Wallet"
+                        )}
                     </Button>
                 </Action>
             </Details>
@@ -92,7 +102,7 @@ const Image = styled.img`
 `;
 const Action = styled.div`
     display: grid;
-    grid-template-rows: 1fr 10fr 1fr;
+    grid-template-rows: 10% 80% 10%;
     padding-right: 20px;
     color: white;
 `;
@@ -115,6 +125,22 @@ const Button = styled.div`
     background: cyan;
     color: black;
     font-weight: bold;
+`;
+const Loader = styled.div`
+    border: 4px solid white;
+    border-radius: 50%;
+    border-top: 4px solid red;
+    width: 20px;
+    height: 20px;
+    animation: spin 1s linear infinite;
+    @keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
 `;
 
 export default MovieDetails;
