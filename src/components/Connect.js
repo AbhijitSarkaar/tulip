@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { globalState, initialState } from "./globalContext";
-import detectEthereumProvider from "@metamask/detect-provider";
 import { Outlet, useNavigate } from "react-router";
 
 const Connect = () => {
@@ -47,9 +46,8 @@ const Connect = () => {
             list: json,
             data,
         };
-        const provider = await detectEthereumProvider();
         const { ethereum } = window;
-        if (provider) {
+        if (ethereum) {
             const accounts = await ethereum.request({
                 method: "eth_accounts",
             });
